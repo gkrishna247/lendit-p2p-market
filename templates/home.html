@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}LendIt — Rent Anything from Your Community{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Rent Anything, From Anyone</h1>
+    <p class="hero-subtitle">
+        LendIt connects you with people in your community who have the things you need.
+        Why buy when you can borrow?
+    </p>
+    {% if not user.is_authenticated %}
+    <div class="hero-actions">
+        <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+        <a href="{% url 'item-list' %}" class="btn btn-outline">Browse Items</a>
+    </div>
+    {% else %}
+    <div class="hero-actions">
+        <a href="{% url 'item-create' %}" class="btn btn-primary">List an Item</a>
+        <a href="{% url 'item-list' %}" class="btn btn-outline">Browse Items</a>
+    </div>
+    {% endif %}
+</section>
+
+<section class="section">
+    <h2 class="section-title">Available Items</h2>
+
+    {% if items %}
+    <div class="card-grid">
+        {% for item in items %}
+        <a href="{% url 'item-detail' pk=item.pk %}" class="card">
+            <div class="card-body">
+                <h3 class="card-title">{{ item.title }}</h3>
+                <p class="card-text">{{ item.description|truncatewords:20 }}</p>
+            </div>
+            <div class="card-footer">
+                <span class="card-price">${{ item.daily_price }}/day</span>
+                <span class="card-owner">by {{ item.owner.username }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No items available yet. Be the first to list something!</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'item-create' %}" class="btn btn-primary">List an Item</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

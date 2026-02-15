@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item.title }} — LendIt{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="detail-container">
+        <div class="detail-card">
+            <div class="detail-header">
+                <h1>{{ item.title }}</h1>
+                <span class="badge badge-{{ item.status }}">{{ item.get_status_display }}</span>
+            </div>
+
+            <div class="detail-meta">
+                <span class="detail-price">${{ item.daily_price }}/day</span>
+                <span class="detail-owner">Listed by <strong>{{ item.owner.username }}</strong></span>
+                <span class="detail-date">{{ item.created_at|date:"M d, Y" }}</span>
+            </div>
+
+            <div class="detail-description">
+                <h3>Description</h3>
+                <p>{{ item.description|linebreaks }}</p>
+            </div>
+        </div>
+
+        {% if booking_form %}
+        <div class="booking-card">
+            <h3>Book This Item</h3>
+            <form method="post" action="{% url 'booking-create' pk=item.pk %}">
+                {% csrf_token %}
+                {% for field in booking_form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <span class="form-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                {% if booking_form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in booking_form.non_field_errors %}
+                    <span class="form-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary btn-block">Request Booking</button>
+            </form>
+            <p class="booking-note">
+                Price: <strong>${{ item.daily_price }}</strong> per day. Total will be calculated based on your dates.
+            </p>
+        </div>
+        {% elif not user.is_authenticated %}
+        <div class="booking-card">
+            <h3>Want to Rent This?</h3>
+            <p><a href="{% url 'login' %}?next={% url 'item-detail' pk=item.pk %}">Log in</a> to book this item.</p>
+        </div>
+        {% elif user == item.owner %}
+        <div class="booking-card">
+            <h3>Your Item</h3>
+            <p>This is your listing. You can manage bookings from your <a href="{% url 'dashboard' %}">dashboard</a>.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'item-list' %}" class="btn btn-outline" style="margin-top: 1.5rem;">&larr; Back to Browse</a>
+</section>
+{% endblock %}

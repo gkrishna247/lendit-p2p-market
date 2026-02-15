@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — LendIt{% endblock %}
+
+{% block content %}
+<section class="section">
+    <h1 class="section-title">Dashboard</h1>
+
+    <!-- My Listings -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>My Listings</h2>
+            <a href="{% url 'item-create' %}" class="btn btn-primary btn-sm">+ Add Item</a>
+        </div>
+
+        {% if my_items %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Daily Price</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in my_items %}
+                    <tr>
+                        <td><a href="{% url 'item-detail' pk=item.pk %}">{{ item.title }}</a></td>
+                        <td>${{ item.daily_price }}</td>
+                        <td><span class="badge badge-{{ item.status }}">{{ item.get_status_display }}</span></td>
+                        <td>{{ item.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>You haven't listed any items yet.</p>
+            <a href="{% url 'item-create' %}" class="btn btn-outline">List Your First Item</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Received Bookings -->
+    <div class="dashboard-section">
+        <h2>Booking Requests</h2>
+        <p class="section-subtitle">Bookings on your items from other users</p>
+
+        {% if received_bookings %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Renter</th>
+                        <th>Dates</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in received_bookings %}
+                    <tr>
+                        <td><a href="{% url 'item-detail' pk=booking.item.pk %}">{{ booking.item.title }}</a></td>
+                        <td>{{ booking.renter.username }}</td>
+                        <td>{{ booking.start_date|date:"M d" }} — {{ booking.end_date|date:"M d, Y" }}</td>
+                        <td>${{ booking.total_price }}</td>
+                        <td><span class="badge badge-{{ booking.status }}">{{ booking.get_status_display }}</span></td>
+                        <td>
+                            {% if booking.status == "pending" %}
+                            <div class="action-buttons">
+                                <a href="{% url 'booking-action' pk=booking.pk action='approve' %}"
+                                    class="btn btn-success btn-xs">Approve</a>
+                                <a href="{% url 'booking-action' pk=booking.pk action='reject' %}"
+                                    class="btn btn-danger btn-xs">Reject</a>
+                            </div>
+                            {% else %}
+                            —
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>No booking requests yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

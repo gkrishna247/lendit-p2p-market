@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings — LendIt{% endblock %}
+
+{% block content %}
+<section class="section">
+    <h1 class="section-title">My Bookings</h1>
+    <p class="section-subtitle">Items you've requested to rent</p>
+
+    {% if bookings %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Owner</th>
+                    <th>Dates</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td><a href="{% url 'item-detail' pk=booking.item.pk %}">{{ booking.item.title }}</a></td>
+                    <td>{{ booking.item.owner.username }}</td>
+                    <td>{{ booking.start_date|date:"M d" }} — {{ booking.end_date|date:"M d, Y" }}</td>
+                    <td>${{ booking.total_price }}</td>
+                    <td><span class="badge badge-{{ booking.status }}">{{ booking.get_status_display }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>You haven't made any bookings yet.</p>
+        <a href="{% url 'item-list' %}" class="btn btn-outline">Browse Items</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

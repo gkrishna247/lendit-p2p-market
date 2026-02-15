@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Items — LendIt{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h1 class="section-title">Browse Items</h1>
+        {% if user.is_authenticated %}
+        <a href="{% url 'item-create' %}" class="btn btn-primary">+ List an Item</a>
+        {% endif %}
+    </div>
+
+    {% if items %}
+    <div class="card-grid">
+        {% for item in items %}
+        <a href="{% url 'item-detail' pk=item.pk %}" class="card">
+            <div class="card-body">
+                <h3 class="card-title">{{ item.title }}</h3>
+                <p class="card-text">{{ item.description|truncatewords:20 }}</p>
+            </div>
+            <div class="card-footer">
+                <span class="card-price">${{ item.daily_price }}/day</span>
+                <span class="card-owner">by {{ item.owner.username }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No items available right now. Check back later!</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
