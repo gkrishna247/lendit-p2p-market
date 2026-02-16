@@ -11,12 +11,25 @@
         {% endif %}
     </div>
 
+    <!-- Search & Filter Bar -->
+    <form method="get" action="{% url 'item-list' %}" class="search-bar">
+        <input type="text" name="q" class="form-input" placeholder="Search items…" value="{{ query|default:'' }}">
+        <select name="category" class="form-input">
+            <option value="">All Categories</option>
+            {% for value, label in categories %}
+            <option value="{{ value }}" {% if value == selected_category %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
     {% if items %}
     <div class="card-grid">
         {% for item in items %}
         <a href="{% url 'item-detail' pk=item.pk %}" class="card">
             <div class="card-body">
                 <h3 class="card-title">{{ item.title }}</h3>
+                <span class="badge badge-category">{{ item.get_category_display }}</span>
                 <p class="card-text">{{ item.description|truncatewords:20 }}</p>
             </div>
             <div class="card-footer">
@@ -28,7 +41,7 @@
     </div>
     {% else %}
     <div class="empty-state">
-        <p>No items available right now. Check back later!</p>
+        <p>No items found{% if query %} for "{{ query }}"{% endif %}{% if selected_category %} in this category{% endif %}. Try a different search!</p>
     </div>
     {% endif %}
 </section>

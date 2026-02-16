@@ -32,7 +32,7 @@ class ItemForm(forms.ModelForm):
 
     class Meta:
         model = Item
-        fields = ("title", "description", "daily_price")
+        fields = ("title", "description", "category", "daily_price")
         widgets = {
             "title": forms.TextInput(attrs={
                 "class": "form-input",
@@ -48,6 +48,9 @@ class ItemForm(forms.ModelForm):
                 "placeholder": "0.00",
                 "min": "0.01",
                 "step": "0.01",
+            }),
+            "category": forms.Select(attrs={
+                "class": "form-input",
             }),
         }
 

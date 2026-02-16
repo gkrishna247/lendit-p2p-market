@@ -95,12 +95,12 @@ main.container {
    Navbar
    --------------------------------------------------------------------------- */
 .navbar {
-    background: var(--card-bg);
-    border-bottom: 1px solid var(--border);
+    background: var(--secondary);
+    border-bottom: none;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: var(--shadow);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .nav-container {
@@ -116,14 +116,14 @@ main.container {
 .nav-brand {
     font-size: 1.35rem;
     font-weight: 700;
-    color: var(--text);
+    color: #fff;
     display: flex;
     align-items: center;
     gap: 0.4rem;
 }
 
 .nav-brand:hover {
-    color: var(--primary);
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .brand-icon {
@@ -138,7 +138,7 @@ main.container {
 }
 
 .nav-link {
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.9rem;
     font-weight: 500;
     padding: 0.5rem 0.85rem;
@@ -147,8 +147,8 @@ main.container {
 }
 
 .nav-link:hover {
-    color: var(--primary);
-    background: var(--bg-alt);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .nav-link--cta {
@@ -161,12 +161,12 @@ main.container {
 }
 
 .nav-link--logout {
-    color: var(--danger);
+    color: #fca5a5;
 }
 
 .nav-link--logout:hover {
-    background: var(--danger-bg);
-    color: var(--danger);
+    background: rgba(220, 38, 38, 0.2);
+    color: #fca5a5;
 }
 
 /* Mobile toggle */
@@ -183,7 +183,7 @@ main.container {
 .nav-toggle span {
     width: 24px;
     height: 2px;
-    background: var(--text);
+    background: #fff;
     border-radius: 2px;
     transition: var(--transition);
 }
@@ -194,6 +194,11 @@ main.container {
 .hero {
     text-align: center;
     padding: 4rem 0 3rem;
+    background: linear-gradient(180deg, #eff6ff 0%, var(--bg) 100%);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    margin: -2rem -1.5rem 2rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
 .hero h1 {
@@ -315,8 +320,8 @@ main.container {
 
 .card:hover {
     box-shadow: var(--shadow-lg);
-    border-color: var(--border-hover);
-    transform: translateY(-2px);
+    border-color: var(--primary);
+    transform: translateY(-6px);
     color: inherit;
 }
 
@@ -389,6 +394,25 @@ main.container {
 .section-header h2 {
     font-size: 1.25rem;
     font-weight: 700;
+}
+
+/* ---------------------------------------------------------------------------
+   Search & Filter Bar
+   --------------------------------------------------------------------------- */
+.search-bar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.search-bar .form-input {
+    flex: 1;
+    min-width: 180px;
+}
+
+.search-bar select.form-input {
+    flex: 0 1 200px;
 }
 
 /* ---------------------------------------------------------------------------
@@ -613,6 +637,13 @@ textarea.form-input {
     color: var(--info);
 }
 
+.badge-category {
+    background: var(--bg-alt);
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    margin-bottom: 0.4rem;
+}
+
 /* ---------------------------------------------------------------------------
    Tables
    --------------------------------------------------------------------------- */
@@ -770,6 +801,7 @@ textarea.form-input {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -796,7 +828,7 @@ textarea.form-input {
         top: 64px;
         left: 0;
         right: 0;
-        background: var(--card-bg);
+        background: var(--secondary);
         flex-direction: column;
         padding: 1rem 1.5rem;
         border-bottom: 1px solid var(--border);

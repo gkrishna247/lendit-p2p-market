@@ -10,6 +10,7 @@ from datetime import date
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.db import models
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import BookingForm, ItemForm, UserRegisterForm
@@ -85,9 +86,36 @@ def logout_view(request):
 
 
 def item_list(request):
-    """Display all available items (browse page)."""
+    """Display available items with optional search and category filtering.
+
+    Reads GET parameters:
+        q (str): Keyword to search in title and description.
+        category (str): Category slug to filter by.
+    """
     items = Item.objects.filter(status="available")
-    return render(request, "marketplace/item_list.html", {"items": items})
+
+    query: str = request.GET.get("q", "").strip()
+    selected_category: str = request.GET.get("category", "").strip()
+
+    if query:
+        items = items.filter(
+            models.Q(title__icontains=query)
+            | models.Q(description__icontains=query)
+        )
+
+    if selected_category:
+        items = items.filter(category=selected_category)
+
+    return render(
+        request,
+        "marketplace/item_list.html",
+        {
+            "items": items,
+            "query": query,
+            "selected_category": selected_category,
+            "categories": Item.Category.choices,
+        },
+    )
 
 
 def item_detail(request, pk):

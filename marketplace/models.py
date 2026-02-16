@@ -13,6 +13,15 @@ from django.db import models
 class Item(models.Model):
     """An item listed for peer-to-peer rental."""
 
+    class Category(models.TextChoices):
+        """Available item categories for browsing and filtering."""
+
+        ELECTRONICS = "electronics", "Electronics"
+        TOOLS = "tools", "Tools"
+        HOME = "home", "Home"
+        OUTDOORS = "outdoors", "Outdoors"
+        OTHER = "other", "Other"
+
     STATUS_CHOICES = [
         ("available", "Available"),
         ("rented", "Rented"),
@@ -23,6 +32,11 @@ class Item(models.Model):
     )
     title = models.CharField(max_length=200)
     description = models.TextField()
+    category = models.CharField(
+        max_length=20,
+        choices=Category.choices,
+        default=Category.OTHER,
+    )
     daily_price = models.DecimalField(max_digits=8, decimal_places=2)
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default="available"
